@@ -33,9 +33,9 @@ typedef struct OperatingSystem {
 	char *kernelType;
 
 	int isDeleted; // internal field
-} operatingSystem_t;
+} os_t;
 
-typedef struct DataBases {
+typedef struct databases {
 
 	int id;
 	char *name;
@@ -44,7 +44,7 @@ typedef struct DataBases {
 	char *developer;
 
 	int isDeleted; // interal field
-} databases_t;
+} db_t;
 
 
 // step 2: create typedef struct for storing metadata
@@ -53,20 +53,20 @@ typedef struct MetaData {
 	int count;
 	int nextIndex;
 	int maxCount;
-} metadata_t;
+} md_t;
 
 // step 3: declare the two other arrays of structs
 // programmingLanguages has been defined for you already
 // TODO: add operatingSystems and databases
 language_t* programmingLanguages;
 
-operatingSystem_t* operatingSystems;
-databases_t* dataBases;
+os_t* operatingSystems;
+db_t* databases;
 
 // step 4: declare 3 metadata structs, one for each table
-metadata_t* operatingSystems_MetaData;
-metadata_t* dataBases_MetaData;
-metadata_t* programmingLanguages_MetaData;
+md_t* os_md;
+md_t* db_md;
+md_t* languages_md;
 
 // step 5: jump to L167
 
@@ -114,19 +114,13 @@ void setup(char* table, int numRows) {
 
 	if (strcmp(table, "programmingLanguages") == 0) {
 		programmingLanguages = (language_t*)malloc(numRows * sizeof(language_t));
-		programmingLanguages_MetaData->count = 0;
-		programmingLanguages_MetaData->nextIndex = 0;
-		programmingLanguages_MetaData->maxCount = numRows;
+		languages_md->maxCount = numRows;
 	} else if (strcmp(table, "operatingSystems") == 0) {
-		operatingSystems = (operatingSystem_t*)malloc(numRows * sizeof(operatingSystem_t));
-		operatingSystems_MetaData->count = 0;
-		operatingSystems_MetaData->nextIndex = 0;
-		operatingSystems_MetaData->maxCount = numRows;
+		operatingSystems = (os_t*)malloc(numRows * sizeof(os_t));
+		os_md->maxCount = numRows;
 	} else if (strcmp(table, "databases") == 0) {
-		dataBases = (databases_t*)malloc(numRows * sizeof(databases_t));
-		dataBases_MetaData->count = 0;
-		dataBases_MetaData->nextIndex = 0;
-		dataBases_MetaData->maxCount = numRows;
+		databases = (db_t*)malloc(numRows * sizeof(db_t));
+		db_md->maxCount = numRows;
 	}
 	// DO NOT TOUCH THIS PRINT
 	// REQUIRED FOR AUTOGRADER
@@ -144,56 +138,56 @@ void insert(char** args) {
 
 	if (strcmp(args[1], "programmingLanguages") == 0) {
 		
-		if (programmingLanguages_MetaData->count >= programmingLanguages_MetaData->maxCount) {
+		if (languages_md->nextIndex >= languages_md->maxCount) {
 			fprintf(stderr, "cannot insert due to insufficient capacity.\n");
 			return;
 		}
 
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].id =atoi(args[2]);
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].language = strdup(args[3]);
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].year = atoi(args[4]);
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].creator = strdup(args[5]);
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].paradigm = strdup(args[6]);
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].popularityIndex = atof(args[7]);
-		programmingLanguages[programmingLanguages_MetaData->nextIndex].isDeleted = 0;
+		programmingLanguages[languages_md->nextIndex].id = atoi(args[2]);
+		programmingLanguages[languages_md->nextIndex].language = strdup(args[3]);
+		programmingLanguages[languages_md->nextIndex].year = atoi(args[4]);
+		programmingLanguages[languages_md->nextIndex].creator = strdup(args[5]);
+		programmingLanguages[languages_md->nextIndex].paradigm = strdup(args[6]);
+		programmingLanguages[languages_md->nextIndex].popularityIndex = atof(args[7]);
+		programmingLanguages[languages_md->nextIndex].isDeleted = 0;
 		
-		programmingLanguages_MetaData->count++;
-		programmingLanguages_MetaData->nextIndex++;
+		languages_md->count++;
+		languages_md->nextIndex++;
 
 	} else if (strcmp(args[1], "operatingSystems") == 0) {
 
-		if (operatingSystems_MetaData->count >= operatingSystems_MetaData->maxCount) {
+		if (os_md->nextIndex >= os_md->maxCount) {
 			fprintf(stderr, "cannot insert due to insufficient capacity.\n");
 			return;
 		}
 
-		operatingSystems[operatingSystems_MetaData->nextIndex].id = atoi(args[2]);
-		operatingSystems[operatingSystems_MetaData->nextIndex].name = strdup(args[3]);
-		operatingSystems[operatingSystems_MetaData->nextIndex].year = atoi(args[4]);
-		operatingSystems[operatingSystems_MetaData->nextIndex].developer = strdup(args[5]);
-		operatingSystems[operatingSystems_MetaData->nextIndex].kernelType = strdup(args[6]);
-		operatingSystems[operatingSystems_MetaData->nextIndex].isDeleted = 0;
+		operatingSystems[os_md->nextIndex].id = atoi(args[2]);
+		operatingSystems[os_md->nextIndex].name = strdup(args[3]);
+		operatingSystems[os_md->nextIndex].year = atoi(args[4]);
+		operatingSystems[os_md->nextIndex].developer = strdup(args[5]);
+		operatingSystems[os_md->nextIndex].kernelType = strdup(args[6]);
+		operatingSystems[os_md->nextIndex].isDeleted = 0;
 		
-		operatingSystems_MetaData->count++;
-		operatingSystems_MetaData->nextIndex++;
+		os_md->count++;
+		os_md->nextIndex++;
 		
 
 	} else if (strcmp(args[1], "databases") == 0) {
 
-		if (dataBases_MetaData->count >= dataBases_MetaData->maxCount) {
+		if (db_md->nextIndex >= db_md->maxCount) {
 			fprintf(stderr, "cannot insert due to insufficient capacity.\n");
 			return;
 		}
 
-		dataBases[dataBases_MetaData->nextIndex].id = atoi(args[2]);
-		dataBases[dataBases_MetaData->nextIndex].name = strdup(args[3]);
-		dataBases[dataBases_MetaData->nextIndex].year = atoi(args[4]);
-		dataBases[dataBases_MetaData->nextIndex].type = strdup(args[5]);
-		dataBases[dataBases_MetaData->nextIndex].developer = strdup(args[6]);
-		dataBases[dataBases_MetaData->nextIndex].isDeleted = 0;
+		databases[db_md->nextIndex].id = atoi(args[2]);
+		databases[db_md->nextIndex].name = strdup(args[3]);
+		databases[db_md->nextIndex].year = atoi(args[4]);
+		databases[db_md->nextIndex].type = strdup(args[5]);
+		databases[db_md->nextIndex].developer = strdup(args[6]);
+		databases[db_md->nextIndex].isDeleted = 0;
 
-		dataBases_MetaData->count++;
-		dataBases_MetaData->nextIndex++;
+		db_md->count++;
+		db_md->nextIndex++;
 
 	}
 
@@ -212,21 +206,21 @@ void insert(char** args) {
 void delete(char* table, int id) {
 
 	if (strcmp(table, "programmingLanguages") == 0) {
-		for (int i = 0; i < programmingLanguages_MetaData->count; i++) {
+		for (int i = 0; i < languages_md->count; i++) {
 			if (programmingLanguages[i].id == id) {
 				programmingLanguages[i].isDeleted = 1;
 			}
 		}
 	} else if (strcmp(table, "operatingSystems") == 0) {
-		for (int i = 0; i < operatingSystems_MetaData->count; i++) {
+		for (int i = 0; i < os_md->count; i++) {
 			if (operatingSystems[i].id == id) {
 				operatingSystems[i].isDeleted = 1;
 			}
 		}
-	} else if (strcmp(table, "dataBases") == 0) {
-		for (int i = 0; i < dataBases_MetaData->count; i++) {
-			if (dataBases[i].id == id) {
-				dataBases[i].isDeleted = 1;
+	} else if (strcmp(table, "databases") == 0) {
+		for (int i = 0; i < db_md->count; i++) {
+			if (databases[i].id == id) {
+				databases[i].isDeleted = 1;
 			}
 		}
 	}
@@ -242,28 +236,28 @@ void delete(char* table, int id) {
 // !!!NOTE: The structs store pointers. Make sure to free any allocated
 // memory before overwriting it!!!
 void modify(char** args) {
-	char* table = args[1];
-	int id = atoi(args[2]);
+	// char* table = args[1];
+	// int id = atoi(args[2]);
 
-    if (strcmp(table, "programmingLanguages") == 0) {
-        for (int i = 0; i < programmingLanguages_MetaData->count; i++) {
+    if (strcmp(args[1], "programmingLanguages") == 0) {
+        for (int i = 0; i < languages_md->count; i++) { // maybe nextIndex instead of count
             if (programmingLanguages[i].id == atoi(args[2])) { // == atoi(args[2]) instead of == id maybe?
-                // Free the existing data
+                // Free the existing data	
                 free(programmingLanguages[i].language);
                 free(programmingLanguages[i].creator);
                 free(programmingLanguages[i].paradigm);
 
                 // Update the data with the new values
-                programmingLanguages[i].id = id;
-                programmingLanguages[i].language = strdup(args[3]); 
-                programmingLanguages[i].year = atoi(args[4]);
-                programmingLanguages[i].creator = strdup(args[5]); 
-                programmingLanguages[i].paradigm = strdup(args[6]); 
-                programmingLanguages[i].popularityIndex = atof(args[7]);
+                programmingLanguages[i].id = atoi(args[3]);
+                programmingLanguages[i].language = strdup(args[4]); 
+                programmingLanguages[i].year = atoi(args[5]);
+                programmingLanguages[i].creator = strdup(args[6]); 
+                programmingLanguages[i].paradigm = strdup(args[7]); 
+                programmingLanguages[i].popularityIndex = atof(args[8]);
             }
         }
-    } else if (strcmp(table, "operatingSystems") == 0) {
-		for (int i = 0; i < operatingSystems_MetaData->count; i++) {
+    } else if (strcmp(args[1], "operatingSystems") == 0) {
+		for (int i = 0; i < os_md->count; i++) {
 			if (operatingSystems[i].id == atoi(args[2])) {
                 // Free the existing data
                 free(operatingSystems[i].name);
@@ -271,27 +265,27 @@ void modify(char** args) {
                 free(operatingSystems[i].kernelType);
 
                 // Update the data with the new values
-                operatingSystems[i].id = id;
-                operatingSystems[i].name = strdup(args[3]); 
-                operatingSystems[i].year = atoi(args[4]);
-                operatingSystems[i].developer = strdup(args[5]); 
-                operatingSystems[i].kernelType = strdup(args[6]); 
+                operatingSystems[i].id = atoi(args[3]);
+                operatingSystems[i].name = strdup(args[4]); 
+                operatingSystems[i].year = atoi(args[5]);
+                operatingSystems[i].developer = strdup(args[6]); 
+                operatingSystems[i].kernelType = strdup(args[7]); 
             }
 		}
-	} else if (strcmp(table, "dataBases") == 0) {
-        for (int i = 0; i < dataBases_MetaData->count; i++) {
-            if (dataBases[i].id == atoi(args[2])) {
+	} else if (strcmp(args[1], "databases") == 0) {
+        for (int i = 0; i < db_md->count; i++) {
+            if (databases[i].id == atoi(args[2])) {
                 // Free the existing data
-                free(dataBases[i].name);
-                free(dataBases[i].type);
-                free(dataBases[i].developer);
+                free(databases[i].name);
+                free(databases[i].type);
+                free(databases[i].developer);
 
                 // Update the data with the new values
-                dataBases[i].id = id;
-                dataBases[i].name = strdup(args[3]); 
-                dataBases[i].year = atoi(args[4]);
-                dataBases[i].type = strdup(args[5]); 
-                dataBases[i].developer = strdup(args[6]); 
+                databases[i].id = atoi(args[3]);
+                databases[i].name = strdup(args[4]); 
+                databases[i].year = atoi(args[5]);
+                databases[i].type = strdup(args[6]); 	
+                databases[i].developer = strdup(args[7]); 
             }
         }
     }
@@ -311,11 +305,12 @@ void get(char* table) {
 
 	if (strcmp(table, "programmingLanguages") == 0) {
 		// printf("first if statement works\n");
-		for (int i = 0; i < programmingLanguages_MetaData->count; i++) {
+		printf("id,language,year,creator,paradigm,popularityIndex\n");
+		for (int i = 0; i < languages_md->count; i++) {
 			// printf("for loop works\n");
 			if (programmingLanguages[i].isDeleted == 0) {
 				// printf("if isDeleted is reached");
-			  	printf("id,language,year,creator,paradigm,popularityIndex\n");
+			  	// printf("id,language,year,creator,paradigm,popularityIndex\n"); // accidently prints this every time
 			  	printf("%d,%s,%d,%s,%s,%lf\n", 
 					programmingLanguages[i].id,
 					programmingLanguages[i].language,
@@ -326,9 +321,10 @@ void get(char* table) {
 			}
 		}
 	} else if (strcmp(table, "operatingSystems") == 0) {
-		for (int i = 0; i < operatingSystems_MetaData->count; i++) {
+		printf("id,name,year,developer,kernelType\n");
+		for (int i = 0; i < os_md->count; i++) {
 			if (operatingSystems[i].isDeleted == 0) {
-				printf("id,name,year,developer,kernelType\n");
+				// printf("id,name,year,developer,kernelType\n");
 				printf("%d,%s,%d,%s,%s\n",
 				operatingSystems[i].id,
 				operatingSystems[i].name,
@@ -337,16 +333,17 @@ void get(char* table) {
 				operatingSystems[i].kernelType);
 			}
 		}
-	} else if (strcmp(table, "dataBases") == 0) {
-		for (int i = 0; i < dataBases_MetaData->count; i++) {
-			if (dataBases[i].isDeleted == 0) {
-				printf("id,name,year,type,developer\n");
+	} else if (strcmp(table, "databases") == 0) {
+		printf("id,name,year,type,developer\n");
+		for (int i = 0; i < db_md->count; i++) {
+			if (databases[i].isDeleted == 0) {
+				// printf("id,name,year,type,developer\n");
 				printf("%d,%s,%d,%s,%s\n",
-				dataBases[i].id, 
-				dataBases[i].name,
-				dataBases[i].year,
-				dataBases[i].type,
-				dataBases[i].developer);
+				databases[i].id, 
+				databases[i].name,
+				databases[i].year,
+				databases[i].type,
+				databases[i].developer);
 			}
 		}
 	}
@@ -358,32 +355,32 @@ void get(char* table) {
 // inside a struct (char*) before freeing the struct pointer
 void exitProgram() {
 
-	for (int i = 0; i < programmingLanguages_MetaData->count; i++) {
+	for (int i = 0; i < languages_md->count; i++) {
 		free(programmingLanguages[i].language);
 		free(programmingLanguages[i].creator);
 		free(programmingLanguages[i].paradigm);
 	}
 
 	free(programmingLanguages);
-    free(programmingLanguages_MetaData);
+    free(languages_md);
 
-	for (int i = 0; i < operatingSystems_MetaData->count; i++) {
+	for (int i = 0; i < os_md->count; i++) {
 		free(operatingSystems[i].name);
 		free(operatingSystems[i].developer);
 		free(operatingSystems[i].kernelType);
 	}
 
 	free(operatingSystems);
-	free(operatingSystems_MetaData);
+	free(os_md);
 
-	for (int i = 0; i < dataBases_MetaData->count; i++) {
-		free(dataBases[i].name);
-		free(dataBases[i].type);
-		free(dataBases[i].developer);
+	for (int i = 0; i < db_md->count; i++) {
+		free(databases[i].name);
+		free(databases[i].type);
+		free(databases[i].developer);
 	}
 
-	free(dataBases);
-    free(dataBases_MetaData);
+	free(databases);
+    free(db_md);
 
 	exit(0);
 }
@@ -416,21 +413,21 @@ void execute_cmd(char** args, int arg_count) {
 // jump to L76
 void initializeMetadata() { //we init maxCount in startup
 
-	programmingLanguages_MetaData = (metadata_t*)malloc(sizeof(metadata_t));
-	operatingSystems_MetaData = (metadata_t*)malloc(sizeof(metadata_t));
-	dataBases_MetaData = (metadata_t*)malloc(sizeof(metadata_t));
+	languages_md = (md_t*)malloc(sizeof(md_t));
+	os_md = (md_t*)malloc(sizeof(md_t));
+	db_md = (md_t*)malloc(sizeof(md_t));
 
-	programmingLanguages_MetaData->count = 0;
-	programmingLanguages_MetaData->nextIndex = 0;
-	// programmingLanguages_MetaData->maxCount = 0;
+	languages_md->count = 0;
+	languages_md->nextIndex = 0;
+	// languages_md->maxCount = 0;
 
-	operatingSystems_MetaData->count = 0;
-	operatingSystems_MetaData->nextIndex = 0;
-	// operatingSystems_MetaData->maxCount = 0;
+	os_md->count = 0;
+	os_md->nextIndex = 0;
+	// os_md->maxCount = 0;
 
-	dataBases_MetaData->count = 0;
-	dataBases_MetaData->nextIndex = 0;
-	// dataBases_MetaData->maxCount = 0;
+	db_md->count = 0;
+	db_md->nextIndex = 0;
+	// db_md->maxCount = 0;
 
 }
 
